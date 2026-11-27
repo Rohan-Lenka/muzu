@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -49,14 +47,6 @@ public class UserController {
     }
 
     // implementation after auth
-//    @PatchMapping("/saved/song/{songId}")
-//    public ResponseEntity<SavedSongDto> renameUserSavedSong(
-//            @PathVariable String songId,
-//            @RequestParam(name = "name") String newName
-//    ) {
-//        return ResponseEntity.ok(userService.renameUserSavedSong(songId, newName));
-//    }
-//
 //    @DeleteMapping("/saved/song/{songId}")
 //    public ResponseEntity<Void> unsaveUserSavedSong(@PathVariable String songId) {
 //        userService.unsaveUserSavedSong(songId);
