@@ -1,11 +1,13 @@
 package com.muzu.backend.controller;
 
+import com.muzu.backend.constants.PageConstants;
+import com.muzu.backend.dto.song.PaginatedSavedSongsDto;
 import com.muzu.backend.dto.song.SaveSongRequestDto;
 import com.muzu.backend.dto.song.SavedSongDto;
 import com.muzu.backend.dto.user.UserProfileDto;
-import com.muzu.backend.repository.UserRepository;
 import com.muzu.backend.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +40,12 @@ public class UserController {
     }
 
     @GetMapping("/saved/songs/{userId}")
-    public ResponseEntity<List<SavedSongDto>> getSavedSongs(@PathVariable String userId) {
-        return ResponseEntity.ok(userService.getSavedSongsByUserId(userId));
+    public ResponseEntity<PaginatedSavedSongsDto> getSavedSongs(
+            @PathVariable String userId,
+            @RequestParam(name = "page") @Min(0) int page,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "" + PageConstants.DEFAULT_PAGE_SIZE) int pageSize
+    ) {
+        return ResponseEntity.ok(userService.getSavedSongsByUserId(userId, page, pageSize));
     }
 
     // implementation after auth

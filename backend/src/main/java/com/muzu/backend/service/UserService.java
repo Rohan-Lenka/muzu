@@ -1,5 +1,6 @@
 package com.muzu.backend.service;
 
+import com.muzu.backend.dto.song.PaginatedSavedSongsDto;
 import com.muzu.backend.dto.song.SaveSongRequestDto;
 import com.muzu.backend.dto.song.SavedSongDto;
 import com.muzu.backend.dto.user.UserProfileDto;
@@ -9,6 +10,8 @@ import com.muzu.backend.repository.UserRepository;
 import com.muzu.backend.service.utils.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,12 +41,14 @@ public class UserService {
         return modelMapper.map(savedSong, SavedSongDto.class);
     }
 
-    public List<SavedSongDto> getSavedSongsByUserId(String userId) {
-        var savedSongs = userRepository.getSavedSongsByUserId(userId);
-        return savedSongs
+    public PaginatedSavedSongsDto getSavedSongsByUserId(String userId, int page, int pageSize) {
+        if (pageSize <= 0) throw new IllegalArgumentException("Page size should be a positive value");
+        Page<Song> response = songRepository.findAllByUser_Id(userId, PageRequest.of(page, pageSize));
+        List<SavedSongDto> savedSongs = response
                 .stream()
                 .map(song -> modelMapper.map(song, SavedSongDto.class))
                 .toList();
+        return new PaginatedSavedSongsDto(response.getTotalElements(), response.getTotalPages(), savedSongs);
     }
 
 }
